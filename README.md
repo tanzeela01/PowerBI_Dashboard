@@ -22,6 +22,37 @@ In this project, the provided dataset was initially in a wide format with dates 
 
 - Converting the wide table into a long one to gather all the date-related information into a single column for analysis.
 
+## Making measures in power BI
+Calculating the total working days 
+DAX syntax
+"Total Working Days =
+VAR totaldays = COUNT('final_data'[Value])
+VAR noworkdays = CALCULATE(
+    COUNT('final_data'[Value]),
+    'final_data'[Value] IN { "WO", "HO" }
+)
+RETURN totaldays - noworkdays
+"
+Calculating work from home count 
+"WFH C = 
+SWITCH(
+    TRUE(),
+    'final_data'[Value] = "WFH", 1,
+    'final_data'[Value] = "HWFH", 0.5,
+    0
+)
+"
+Calculating work from home percentage
+WFH Count = SUM('final_data'[WFH C])
+calculating present days 
+"Present days = 
+VAR Presentdays = CALCULATE(COUNT('final_data'[Value]), 'final_data'[Value] = "p")
+RETURN Presentdays
+"
+caluculating presence percentage
+"PRESENCE % = DIVIDE([Present days],'Measure Table'[Total Working Days],0)"
+caluculating Sick leave percentage
+SL % = DIVIDE([SL C],[Total Working Days],0)
 ## Analysis and Objectives
 
 The main objectives of this project's analysis are:
